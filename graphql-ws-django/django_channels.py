@@ -1,37 +1,33 @@
-from channels.generic.websocket import JsonWebsocketConsumer
-from .base import BaseConnectionContext
 import json
-from graphql.execution.executors.sync import SyncExecutor
-from .base import (
-    ConnectionClosedException,
-    BaseConnectionContext,
-    BaseSubscriptionServer
-)
-from .constants import (
-    GQL_CONNECTION_ACK,
-    GQL_CONNECTION_ERROR
-)
-from django.conf import settings
-from rx import Observer, Observable
+
+from channels.generic.websocket import JsonWebsocketConsumer
 from django.conf import settings
 from graphene_django.settings import graphene_settings
+from graphql.execution.executors.sync import SyncExecutor
+from rx import Observable, Observer
+
+from .base import (BaseConnectionContext, BaseSubscriptionServer,
+                   ConnectionClosedException)
+from .constants import GQL_CONNECTION_ACK, GQL_CONNECTION_ERROR
+
 
 class DjangoChannelConnectionContext(BaseConnectionContext):
-    
-    def __init__(self, message, request_context = None):
+
+    def __init__(self, message, request_context=None):
         self.message = message
         self.operations = {}
         self.request_context = request_context
 
     def send(self, data):
         self.message.reply_channel.send(data)
-    
+
     def close(self, reason):
         data = {
             'close': True,
             'text': reason
         }
         self.message.reply_channel.send(data)
+
 
 class DjangoChannelSubscriptionServer(BaseSubscriptionServer):
 
@@ -102,16 +98,17 @@ class GraphQLSubscriptionConsumer(JsonWebsocketConsumer):
     def connect(self, message, **kwargs):
         message.reply_channel.send({"accept": True})
 
-
     def receive(self, content, **kwargs):
         """
         Called when a message is received with either text or bytes
         filled out.
         """
         self.connection_context = DjangoChannelConnectionContext(self.message)
-        self.subscription_server = DjangoChannelSubscriptionServer(graphene_settings.SCHEMA)
+        self.subscription_server = DjangoChannelSubscriptionServer(
+            graphene_settings.SCHEMA)
         self.subscription_server.on_open(self.connection_context)
         self.subscription_server.handle(content, self.connection_context)
+
 
 class SubscriptionObserver(Observer):
 
