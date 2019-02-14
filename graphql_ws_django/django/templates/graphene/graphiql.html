@@ -104,7 +104,7 @@ add "&raw" to the end of the URL within a browser.
     }
     var fetcher;
     if (true) {
-      var subscriptionsEndpoint = (location.protocol === 'http:' ? 'ws' : 'wss') + '://' + location.host + '/subscriptions';
+      var subscriptionsEndpoint = (location.protocol === 'http:' ? 'ws' : 'wss')   + '://' + location.host + '/subscriptions';
       var subscriptionsClient = new window.SubscriptionsTransportWs.SubscriptionClient(subscriptionsEndpoint, {
         reconnect: true
       });

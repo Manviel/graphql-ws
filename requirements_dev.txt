@@ -10,6 +10,5 @@ pytest==2.9.2
 pytest-runner==2.11.1
 gevent
 graphene>=2.0
-Django==2.1.7
-channels==2.1.7
-graphql-ws==0.3.0
+django
+channels

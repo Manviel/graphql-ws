@@ -1,5 +1,4 @@
-GRAPHQL_WS = 'graphql-ws'
-WS_PROTOCOL = GRAPHQL_WS
+WS_PROTOCOL = 'graphql-ws'
 
 GQL_CONNECTION_INIT = 'connection_init'  # Client -> Server
 GQL_CONNECTION_ACK = 'connection_ack'  # Server -> Client
